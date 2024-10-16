@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-k = 1
+k = 5
 
 llm = taide_llm # change this use different LLM provider
 
