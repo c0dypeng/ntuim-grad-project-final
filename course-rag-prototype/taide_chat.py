@@ -21,9 +21,9 @@ def get_token():
 taide_llm = ChatOpenAI(
     model="TAIDE/a.2.0.0",
     temperature=0,
-    max_tokens=200,
+    max_tokens=4000,
     timeout=None,
     max_retries=2,
     openai_api_base="https://td.nchc.org.tw/api/v1/",
-    openai_api_key=get_token(),
+    openai_api_key=get_token(),    
 )
