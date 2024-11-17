@@ -34,9 +34,10 @@ async def get_answer_multilingual_e5_reordering(llm, k, prompt, query: str) -> s
     vectorstore = PineconeVectorStore(
         index_name=index_name, embedding=embeddings)
     docs = await asyncio.to_thread(vectorstore.similarity_search, query=query, k=k)
-
+    print("docs: ", docs)
     reordering = LongContextReorder()
     docs_reordered = reordering.transform_documents(docs)
+    print("docs_reordered: ", docs_reordered)
     docs_reordered = prepare_documents_with_separation(docs_reordered)
 
     chain = load_qa_chain(llm, chain_type="stuff", prompt=prompt)
