@@ -4,10 +4,6 @@ from langchain_core.pydantic_v1 import BaseModel, Field
 class CourseSearch(BaseModel):
     """Search over a database of courses in a university."""
 
-    text: Optional[str] = Field(
-        "課",
-        description="Description of the course."
-    )
     course_name: Optional[str] = Field(
         None,
         description="Name of the course. 課程名稱"
