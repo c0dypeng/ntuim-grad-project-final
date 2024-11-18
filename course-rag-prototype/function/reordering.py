@@ -19,6 +19,16 @@ import asyncio
 from dotenv import load_dotenv
 from langchain.prompts import PromptTemplate
 
+stuff_prompt_override = """你是一個了解台大課程的人，請謹慎、有禮貌但親切地給予協助，這對使用者而言非常重要。以下是系統找到的相關資訊:
+-----
+{context}
+-----
+請根據系統提供的資訊回答以下問題，請你以「以下是我找到的資訊」開頭。若以上資訊與問題無關，請忽略以上資訊:
+{query}"""
+prompt_template = PromptTemplate(
+    template=stuff_prompt_override, input_variables=["context", "query"]
+)
+# ********** PROMPT SETUP **********
 
 def prepare_documents_with_separation(docs):
     prepared_docs = []
@@ -35,7 +45,7 @@ def prepare_documents_with_separation(docs):
 """
 Add reordering, promptTemplate, and prepare_documents_with_separation
 """
-async def get_answer_multilingual_e5_reordering(llm, k, prompt, query: str) -> str:
+async def get_answer_multilingual_e5_reordering(llm, k, query: str) -> str:
     embeddings = PineconeEmbeddings(model="multilingual-e5-large")
     index_name = "ntuim-course"
     vectorstore = PineconeVectorStore(
@@ -46,6 +56,6 @@ async def get_answer_multilingual_e5_reordering(llm, k, prompt, query: str) -> s
     docs_reordered = reordering.transform_documents(docs)
     docs_reordered = prepare_documents_with_separation(docs_reordered)
 
-    chain = load_qa_chain(llm, chain_type="stuff", prompt=prompt)
+    chain = load_qa_chain(llm, chain_type="stuff", prompt=prompt_template)
     answer = await asyncio.to_thread(chain.run, input_documents=docs_reordered, query=query)
     return answer
