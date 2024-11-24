@@ -21,6 +21,8 @@ from function.reordering import get_answer_multilingual_e5_reordering
 from function.simple_rag import get_answer_multilingual_e5
 from function.metadata_filtering import get_answer_multilingual_e5_metadataFiltering
 from function.only_llm import get_answer_without_rag
+
+from function.simple_rag_agent import get_answer_multilingual_e5_agent
 load_dotenv()
 
 k = 5
@@ -37,18 +39,23 @@ async def main(query: str):
     answer_multilingual_e5_metadataFiltering = await get_answer_multilingual_e5_metadataFiltering(llm, k, query)
     answer_without_rag = await get_answer_without_rag(llm, query)
 
+    answer_multilingual_e5_agent = await get_answer_multilingual_e5_agent(llm, k, query)
+
     chat_history.append({
         "query": query,
         "answer_multilingual_e5": answer_multilingual_e5,
         "answer_multilingual_e5_reordering": answer_multilingual_e5_reordering,
-        "answer_multilingual_e5_metadataFiltering": answer_multilingual_e5_metadataFiltering,
-        "answer_without_rag": answer_without_rag
+        # "answer_multilingual_e5_metadataFiltering": answer_multilingual_e5_metadataFiltering,
+        "answer_without_rag": answer_without_rag,
+        "answer_multilingual_e5_agent": answer_multilingual_e5_agent
     })
     
-    st.write(f'**Answer (multilingual-e5-large)**: {answer_multilingual_e5}')
-    st.write(f'**Answer (multilingual-e5-large with reordering)**: {answer_multilingual_e5_reordering}')
-    st.write(f'**Answer (multilingual-e5-large with metadataFiltering)**: {answer_multilingual_e5_metadataFiltering}')
-    st.write(f'**Answer (without RAG)**: {answer_without_rag}')
+    # # legacy
+    # st.write(f'**Answer (multilingual-e5-large)**: {answer_multilingual_e5}')
+    # st.write(f'**Answer (multilingual-e5-large with reordering)**: {answer_multilingual_e5_reordering}')
+    # st.write(f'**Answer (multilingual-e5-large with metadataFiltering)**: {answer_multilingual_e5_metadataFiltering}')
+    # st.write(f'**Answer (without RAG)**: {answer_without_rag}')
+    # st.write(f'**Answer (multilingual-e5-large agent)**: {answer_multilingual_e5_agent}')
 
 st.title('Query Answering Application')
 query = st.chat_input('Enter your query:')
@@ -64,3 +71,4 @@ for entry in st.session_state.chat_history:
     st.chat_message("assistant").write(f'**Answer (multilingual-e5-large with reordering)**: {entry["answer_multilingual_e5_reordering"]}')
     st.chat_message("assistant").write(f'**Answer (multilingual-e5-large with metadataFiltering)**: {entry["answer_multilingual_e5_metadataFiltering"]}')
     st.chat_message("assistant").write(f'**Answer (without RAG)**: {entry["answer_without_rag"]}')
+    st.chat_message("assistant").write(f'**Answer (multilingual-e5-large agent)**: {entry["answer_multilingual_e5_agent"]}')

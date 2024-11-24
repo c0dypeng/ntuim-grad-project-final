@@ -9,3 +9,4 @@ python-dotenv==1.0.1
 ragas==0.1.13
 datasets==2.20.0
 pandas==2.2.2
+pinecone-client
