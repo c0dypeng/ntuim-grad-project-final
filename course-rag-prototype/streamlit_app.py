@@ -36,7 +36,7 @@ st.session_state.chat_history = chat_history
 async def main(query: str):
     answer_multilingual_e5 = await get_answer_multilingual_e5(llm, k, query)
     answer_multilingual_e5_reordering = await get_answer_multilingual_e5_reordering(llm, k, query)
-    answer_multilingual_e5_metadataFiltering = await get_answer_multilingual_e5_metadataFiltering(llm, k, query)
+    # answer_multilingual_e5_metadataFiltering = await get_answer_multilingual_e5_metadataFiltering(llm, k, query)
     answer_without_rag = await get_answer_without_rag(llm, query)
 
     answer_multilingual_e5_agent = await get_answer_multilingual_e5_agent(llm, k, query)
@@ -69,6 +69,6 @@ for entry in st.session_state.chat_history:
     st.chat_message("user").write(entry["query"])
     st.chat_message("assistant").write(f'**Answer (multilingual-e5-large)**: {entry["answer_multilingual_e5"]}')
     st.chat_message("assistant").write(f'**Answer (multilingual-e5-large with reordering)**: {entry["answer_multilingual_e5_reordering"]}')
-    st.chat_message("assistant").write(f'**Answer (multilingual-e5-large with metadataFiltering)**: {entry["answer_multilingual_e5_metadataFiltering"]}')
+    # st.chat_message("assistant").write(f'**Answer (multilingual-e5-large with metadataFiltering)**: {entry["answer_multilingual_e5_metadataFiltering"]}')
     st.chat_message("assistant").write(f'**Answer (without RAG)**: {entry["answer_without_rag"]}')
     st.chat_message("assistant").write(f'**Answer (multilingual-e5-large agent)**: {entry["answer_multilingual_e5_agent"]}')
