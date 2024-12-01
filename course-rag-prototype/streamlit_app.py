@@ -25,6 +25,7 @@ from function.only_llm import get_answer_without_rag
 from function.simple_rag_agent import get_answer_multilingual_e5_agent
 load_dotenv()
 
+
 k = 5
 
 # llm = taide_llm # change this use different LLM provider
@@ -57,7 +58,7 @@ async def main(query: str):
     # st.write(f'**Answer (without RAG)**: {answer_without_rag}')
     # st.write(f'**Answer (multilingual-e5-large agent)**: {answer_multilingual_e5_agent}')
 
-st.title('Query Answering Application')
+st.title('NTU Course Search')
 query = st.chat_input('Enter your query:')
 # add "query: " to the input query
 # query = 'query: ' + query
