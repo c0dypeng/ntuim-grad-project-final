@@ -25,6 +25,7 @@ from function.only_llm import get_answer_without_rag
 from function.simple_rag_agent import get_answer_multilingual_e5_agent
 load_dotenv()
 
+
 k = 5
 
 # llm = taide_llm # change this use different LLM provider
