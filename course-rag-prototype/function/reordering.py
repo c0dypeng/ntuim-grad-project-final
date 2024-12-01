@@ -56,6 +56,17 @@ async def get_answer_text_embedding_3_large_reordering(llm, k, query: str) -> st
         index_name=index_name, embedding=embeddings)
     docs = await asyncio.to_thread(vectorstore.similarity_search, query=query, k=k)
 
+    # data filtering
+    # make shorten the page content to 700 characters
+    for doc in docs:
+        doc.page_content = doc.page_content[:700]
+    # make embedding_text in matadata to be empty
+    for doc in docs:
+        doc.metadata["embedding_text"] = ""
+    # make text in matadata to be empty
+    for doc in docs:
+        doc.metadata["text"] = ""
+
     reordering = LongContextReorder()
     docs_reordered = reordering.transform_documents(docs)
     docs_reordered = prepare_documents_with_separation(docs_reordered)
