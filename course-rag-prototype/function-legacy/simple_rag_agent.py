@@ -6,7 +6,6 @@ from langchain.agents.agent_types import AgentType
 from langchain.agents import create_react_agent, AgentExecutor
 import asyncio
 from typing import Any
-from langchain_openai import OpenAIEmbeddings
 
 TEMPLATE = """你是一個了解台大課程的人，請謹慎、有禮貌但親切地給予協助，這對使用者而言非常重要。
 
@@ -33,10 +32,8 @@ Instructions: {input}
 {agent_scratchpad}
 """
 
-async def get_answer_text_embedding_3_large_agent(llm, k, query: str) -> str:    
-    embeddings = OpenAIEmbeddings(
-        model="text-embedding-3-large",
-    )
+async def get_answer_multilingual_e5_agent(llm, k, query: str) -> str:    
+    embeddings = PineconeEmbeddings(model="multilingual-e5-large")
     index_name = "ntuim-course"
     vectorstore = PineconeVectorStore(index_name=index_name, embedding=embeddings)
     
