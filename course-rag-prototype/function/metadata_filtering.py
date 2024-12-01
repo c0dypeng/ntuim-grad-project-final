@@ -29,10 +29,8 @@ filter_prompt = ChatPromptTemplate.from_messages(
 
 
 
-async def get_answer_text_embedding_3_large_metadataFiltering(llm, k, query: str) -> str:
-    embeddings = OpenAIEmbeddings(
-        model="text-embedding-3-large",
-    )
+async def get_answer_metadataFiltering(embedding, llm, k, query: str) -> str:
+    embeddings = embedding
     pc = Pinecone()
     index_name = "ntuim-course"
     embedded_query = embeddings.embed_query(query)

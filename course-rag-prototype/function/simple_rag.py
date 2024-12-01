@@ -7,10 +7,8 @@ from langchain_openai import OpenAIEmbeddings
 import asyncio
 
 
-async def get_answer_text_embedding_3_large(llm, k, query: str) -> str:
-    embeddings = OpenAIEmbeddings(
-        model="text-embedding-3-large",
-    )
+async def get_answer_simple_rag(embedding, llm, k, query: str) -> str:
+    embeddings = embedding
     index_name = "ntuim-course"
     vectorstore = PineconeVectorStore(
         index_name=index_name, embedding=embeddings)
