@@ -47,10 +47,8 @@ def prepare_documents_with_separation(docs):
 """
 Add reordering, promptTemplate, and prepare_documents_with_separation
 """
-async def get_answer_text_embedding_3_large_reordering(llm, k, query: str) -> str:
-    embeddings = OpenAIEmbeddings(
-        model="text-embedding-3-large",
-    )
+async def get_answer_reordering(embedding ,llm, k, query: str) -> str:
+    embeddings = embedding
     index_name = "ntuim-course"
     vectorstore = PineconeVectorStore(
         index_name=index_name, embedding=embeddings)
