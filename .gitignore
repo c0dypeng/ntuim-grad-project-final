@@ -1,5 +1,5 @@
 course-rag-prototype/.env
 course-rag-prototype/.conda
 data-processing/課程大綱.json
-data-processing/course-v1.csv
+# data-processing/course-v1.csv
 __pycache__/
