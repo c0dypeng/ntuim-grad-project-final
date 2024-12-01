@@ -57,7 +57,7 @@ async def main(query: str):
     # st.write(f'**Answer (without RAG)**: {answer_without_rag}')
     # st.write(f'**Answer (multilingual-e5-large agent)**: {answer_multilingual_e5_agent}')
 
-st.title('Query Answering Application')
+st.title('NTU Course Search')
 query = st.chat_input('Enter your query:')
 # add "query: " to the input query
 # query = 'query: ' + query
