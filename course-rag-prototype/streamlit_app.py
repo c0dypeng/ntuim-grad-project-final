@@ -17,12 +17,12 @@ from dotenv import load_dotenv
 from langchain.prompts import PromptTemplate
 
 # import functions
-from function.reordering import get_answer_multilingual_e5_reordering
-from function.simple_rag import get_answer_multilingual_e5
-from function.metadata_filtering import get_answer_multilingual_e5_metadataFiltering
+from function.reordering import get_answer_text_embedding_3_large_reordering
+from function.simple_rag import get_answer_text_embedding_3_large
+from function.metadata_filtering import get_answer_text_embedding_3_large_metadataFiltering
 from function.only_llm import get_answer_without_rag
 
-from function.simple_rag_agent import get_answer_multilingual_e5_agent
+from function.simple_rag_agent import get_answer_text_embedding_3_large_agent
 load_dotenv()
 
 
@@ -35,28 +35,20 @@ chat_history = []
 st.session_state.chat_history = chat_history
 
 async def main(query: str):
-    answer_multilingual_e5 = await get_answer_multilingual_e5(llm, k, query)
-    answer_multilingual_e5_reordering = await get_answer_multilingual_e5_reordering(llm, k, query)
-    # answer_multilingual_e5_metadataFiltering = await get_answer_multilingual_e5_metadataFiltering(llm, k, query)
+    answer_text_embedding_3_large = await get_answer_text_embedding_3_large(llm, k, query)
+    answer_text_embedding_3_large_reordering = await get_answer_text_embedding_3_large_reordering(llm, k, query)
+    # answer_text_embedding_3_large_metadataFiltering = await get_answer_text_embedding_3_large_metadataFiltering(llm, k, query)
     answer_without_rag = await get_answer_without_rag(llm, query)
-
-    answer_multilingual_e5_agent = await get_answer_multilingual_e5_agent(llm, k, query)
+    answer_text_embedding_3_large_agent = await get_answer_text_embedding_3_large_agent(llm, k, query)
 
     chat_history.append({
         "query": query,
-        "answer_multilingual_e5": answer_multilingual_e5,
-        "answer_multilingual_e5_reordering": answer_multilingual_e5_reordering,
-        # "answer_multilingual_e5_metadataFiltering": answer_multilingual_e5_metadataFiltering,
+        "answer_text_embedding_3_large": answer_text_embedding_3_large,
+        "answer_text_embedding_3_large_reordering": answer_text_embedding_3_large_reordering,
+        # "answer_text_embedding_3_large_metadataFiltering": answer_text_embedding_3_large_metadataFiltering,
         "answer_without_rag": answer_without_rag,
-        "answer_multilingual_e5_agent": answer_multilingual_e5_agent
+        "answer_text_embedding_3_large_agent": answer_text_embedding_3_large_agent
     })
-    
-    # # legacy
-    # st.write(f'**Answer (multilingual-e5-large)**: {answer_multilingual_e5}')
-    # st.write(f'**Answer (multilingual-e5-large with reordering)**: {answer_multilingual_e5_reordering}')
-    # st.write(f'**Answer (multilingual-e5-large with metadataFiltering)**: {answer_multilingual_e5_metadataFiltering}')
-    # st.write(f'**Answer (without RAG)**: {answer_without_rag}')
-    # st.write(f'**Answer (multilingual-e5-large agent)**: {answer_multilingual_e5_agent}')
 
 st.title('NTU Course Search')
 query = st.chat_input('Enter your query:')
@@ -68,8 +60,8 @@ if query:
 
 for entry in st.session_state.chat_history:
     st.chat_message("user").write(entry["query"])
-    st.chat_message("assistant").write(f'**Answer (multilingual-e5-large)**: {entry["answer_multilingual_e5"]}')
-    st.chat_message("assistant").write(f'**Answer (multilingual-e5-large with reordering)**: {entry["answer_multilingual_e5_reordering"]}')
-    # st.chat_message("assistant").write(f'**Answer (multilingual-e5-large with metadataFiltering)**: {entry["answer_multilingual_e5_metadataFiltering"]}')
+    st.chat_message("assistant").write(f'**Answer (text_embedding_3_large)**: {entry["answer_text_embedding_3_large"]}')
+    st.chat_message("assistant").write(f'**Answer (text_embedding_3_large with reordering)**: {entry["answer_text_embedding_3_large_reordering"]}')
+    # st.chat_message("assistant").write(f'**Answer (text_embedding_3_large with metadataFiltering)**: {entry["answer_text_embedding_3_large_metadataFiltering"]}')
     st.chat_message("assistant").write(f'**Answer (without RAG)**: {entry["answer_without_rag"]}')
-    st.chat_message("assistant").write(f'**Answer (multilingual-e5-large agent)**: {entry["answer_multilingual_e5_agent"]}')
+    st.chat_message("assistant").write(f'**Answer (text_embedding_3_large agent)**: {entry["answer_text_embedding_3_large_agent"]}')
