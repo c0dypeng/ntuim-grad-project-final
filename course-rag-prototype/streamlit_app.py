@@ -39,7 +39,7 @@ async def main(query: str):
     answer_text_embedding_3_large_reordering = await get_answer_text_embedding_3_large_reordering(llm, k, query)
     # answer_text_embedding_3_large_metadataFiltering = await get_answer_text_embedding_3_large_metadataFiltering(llm, k, query)
     answer_without_rag = await get_answer_without_rag(llm, query)
-    answer_text_embedding_3_large_agent = await get_answer_text_embedding_3_large_agent(llm, k, query)
+    # answer_text_embedding_3_large_agent = await get_answer_text_embedding_3_large_agent(llm, k, query)
 
     chat_history.append({
         "query": query,
@@ -47,7 +47,7 @@ async def main(query: str):
         "answer_text_embedding_3_large_reordering": answer_text_embedding_3_large_reordering,
         # "answer_text_embedding_3_large_metadataFiltering": answer_text_embedding_3_large_metadataFiltering,
         "answer_without_rag": answer_without_rag,
-        "answer_text_embedding_3_large_agent": answer_text_embedding_3_large_agent
+        # "answer_text_embedding_3_large_agent": answer_text_embedding_3_large_agent
     })
 
 st.title('NTU Course Search')
@@ -64,4 +64,4 @@ for entry in st.session_state.chat_history:
     st.chat_message("assistant").write(f'**Answer (text_embedding_3_large with reordering)**: {entry["answer_text_embedding_3_large_reordering"]}')
     # st.chat_message("assistant").write(f'**Answer (text_embedding_3_large with metadataFiltering)**: {entry["answer_text_embedding_3_large_metadataFiltering"]}')
     st.chat_message("assistant").write(f'**Answer (without RAG)**: {entry["answer_without_rag"]}')
-    st.chat_message("assistant").write(f'**Answer (text_embedding_3_large agent)**: {entry["answer_text_embedding_3_large_agent"]}')
+    # st.chat_message("assistant").write(f'**Answer (text_embedding_3_large agent)**: {entry["answer_text_embedding_3_large_agent"]}')

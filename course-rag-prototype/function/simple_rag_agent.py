@@ -54,6 +54,18 @@ async def get_answer_text_embedding_3_large_agent(llm, k, query: str) -> str:
             docs = await asyncio.to_thread(
                 self.vectorstore.similarity_search, query=query, k=self.k
             )
+
+            # data filtering
+            # make shorten the page content to 700 characters
+            for doc in docs:
+                doc.page_content = doc.page_content[:700]
+            # make embedding_text in matadata to be empty
+            for doc in docs:
+                doc.metadata["embedding_text"] = ""
+            # make text in matadata to be empty
+            for doc in docs:
+                doc.metadata["text"] = ""
+
             return "\n\n".join([doc.page_content for doc in docs])
     
     search_tool = VectorStoreSearchTool(vectorstore=vectorstore, k=k)
