@@ -8,7 +8,7 @@ import asyncio
 from typing import Any
 from langchain_openai import OpenAIEmbeddings
 
-TEMPLATE = """你是一個了解台大課程的人，請謹慎、有禮貌但親切地給予協助，這對使用者而言非常重要。
+TEMPLATE = """你是一個了解台大課程的人，請謹慎、有禮貌但親切地給予協助，這對使用者而言非常重要。如果你需要知道課程資訊
 
 {tools}
 
@@ -20,10 +20,9 @@ Action Input: the input to the action
 Observation: the result of the action
 '''
 
-當你收集到所有信息後，請根據訊息給予使用者課程選擇上的建議，或者回答使用者的問題。
-
+當你收集到課程相關的信息後，請根據內容給予使用者課程選擇上的建議，或者回答使用者的問題。
 '''
-Thought: Do I need to use a tool? No
+Thought: Do I need to use a tool? No.
 Final Answer: [The AI's response]
 '''
 
@@ -40,7 +39,7 @@ async def get_answer_simple_rag_agent(embedding, llm, k, query: str) -> str:
     
     class VectorStoreSearchTool(BaseTool):
         name: str = "NtuCourseSearch"
-        description: str = "search similar documents about course info in vector store"
+        description: str = "搜尋台大課程"
         vectorstore: Any
         k: int
 
@@ -71,7 +70,7 @@ async def get_answer_simple_rag_agent(embedding, llm, k, query: str) -> str:
 
     prompt = PromptTemplate.from_template(TEMPLATE)
     agent = create_react_agent(llm, tools, prompt=prompt)
-    agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True, handle_parsing_errors=True)
+    agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True, handle_parsing_errors=True, max_iterations=2)
 
     answer = await asyncio.to_thread(agent_executor.invoke, {'input': query})
     print(answer)
