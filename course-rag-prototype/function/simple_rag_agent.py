@@ -6,6 +6,7 @@ from langchain.agents.agent_types import AgentType
 from langchain.agents import create_react_agent, AgentExecutor
 import asyncio
 from typing import Any
+from langchain_openai import OpenAIEmbeddings
 
 TEMPLATE = """你是一個了解台大課程的人，請謹慎、有禮貌但親切地給予協助，這對使用者而言非常重要。如果你需要知道課程資訊
 
@@ -31,8 +32,8 @@ Instructions: {input}
 {agent_scratchpad}
 """
 
-async def get_answer_multilingual_e5_agent(llm, k, query: str) -> str:    
-    embeddings = PineconeEmbeddings(model="multilingual-e5-large")
+async def get_answer_simple_rag_agent(embedding, llm, k, query: str) -> str:    
+    embeddings = embedding
     index_name = "ntuim-course"
     vectorstore = PineconeVectorStore(index_name=index_name, embedding=embeddings)
     
@@ -50,7 +51,19 @@ async def get_answer_multilingual_e5_agent(llm, k, query: str) -> str:
             docs = await asyncio.to_thread(
                 self.vectorstore.similarity_search, query=query, k=self.k
             )
-            return "\n\n".join([doc.page_content[:800] for doc in docs])
+
+            # data filtering
+            # make shorten the page content to 700 characters
+            for doc in docs:
+                doc.page_content = doc.page_content[:700]
+            # make embedding_text in matadata to be empty
+            for doc in docs:
+                doc.metadata["embedding_text"] = ""
+            # make text in matadata to be empty
+            for doc in docs:
+                doc.metadata["text"] = ""
+
+            return "\n\n".join([doc.page_content for doc in docs])
     
     search_tool = VectorStoreSearchTool(vectorstore=vectorstore, k=k)
     tools = [search_tool]

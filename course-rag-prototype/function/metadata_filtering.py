@@ -5,6 +5,7 @@ from langchain_pinecone import PineconeVectorStore, PineconeEmbeddings
 from pinecone import Pinecone
 from langchain.chains.question_answering import load_qa_chain
 from langchain_core.prompts import ChatPromptTemplate
+from langchain_openai import OpenAIEmbeddings
 
 # dependencies for system
 import asyncio
@@ -28,8 +29,8 @@ filter_prompt = ChatPromptTemplate.from_messages(
 
 
 
-async def get_answer_multilingual_e5_metadataFiltering(llm, k, query: str) -> str:
-    embeddings = PineconeEmbeddings(model="multilingual-e5-large")
+async def get_answer_metadataFiltering(embedding, llm, k, query: str) -> str:
+    embeddings = embedding
     pc = Pinecone()
     index_name = "ntuim-course"
     embedded_query = embeddings.embed_query(query)
@@ -40,6 +41,18 @@ async def get_answer_multilingual_e5_metadataFiltering(llm, k, query: str) -> st
     vectorstore = PineconeVectorStore(
         index_name=index_name, embedding=embeddings)
     docs = await asyncio.to_thread(vectorstore.similarity_search, query=query, k=k, filter=filter)
+
+    # data filtering
+    # make shorten the page content to 700 characters
+    for doc in docs:
+        doc.page_content = doc.page_content[:700]
+    # make embedding_text in matadata to be empty
+    for doc in docs:
+        doc.metadata["embedding_text"] = ""
+    # make text in matadata to be empty
+    for doc in docs:
+        doc.metadata["text"] = ""
+
     if not docs:
         docs = []
     chain = load_qa_chain(llm, chain_type="stuff")

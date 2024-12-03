@@ -12,6 +12,8 @@ from langchain_community.document_transformers import (
 )
 from langchain.schema import Document
 from langchain_openai import OpenAI
+from langchain_openai import OpenAIEmbeddings
+
 
 
 # dependencies for system
@@ -45,12 +47,23 @@ def prepare_documents_with_separation(docs):
 """
 Add reordering, promptTemplate, and prepare_documents_with_separation
 """
-async def get_answer_multilingual_e5_reordering(llm, k, query: str) -> str:
-    embeddings = PineconeEmbeddings(model="multilingual-e5-large")
+async def get_answer_reordering(embedding ,llm, k, query: str) -> str:
+    embeddings = embedding
     index_name = "ntuim-course"
     vectorstore = PineconeVectorStore(
         index_name=index_name, embedding=embeddings)
     docs = await asyncio.to_thread(vectorstore.similarity_search, query=query, k=k)
+
+    # data filtering
+    # make shorten the page content to 700 characters
+    for doc in docs:
+        doc.page_content = doc.page_content[:700]
+    # make embedding_text in matadata to be empty
+    for doc in docs:
+        doc.metadata["embedding_text"] = ""
+    # make text in matadata to be empty
+    for doc in docs:
+        doc.metadata["text"] = ""
 
     reordering = LongContextReorder()
     docs_reordered = reordering.transform_documents(docs)
