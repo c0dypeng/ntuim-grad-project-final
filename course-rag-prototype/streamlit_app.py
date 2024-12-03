@@ -44,11 +44,11 @@ async def main(query: str):
     # answer_multilingual_e5 = await get_answer_multilingual_e5(llm, k, query)
     # st.write(f'**Answer (multilingual-e5-large)**: {answer_multilingual_e5}')
     
-    answer_multilingual_e5_reordering = await get_answer_multilingual_e5_reordering(llm, k, prompt, query)
-    st.write(f'**Answer (multilingual-e5-large with reordering)**: {answer_multilingual_e5_reordering}')
+    # answer_multilingual_e5_reordering = await get_answer_multilingual_e5_reordering(llm, k, prompt, query)
+    # st.write(f'**Answer (multilingual-e5-large with reordering)**: {answer_multilingual_e5_reordering}')
     
-    # answer_multilingual_e5_metadataFiltering = await get_answer_multilingual_e5_metadataFiltering_reordering(llm, k, prompt, query)
-    # st.write(f'**Answer (multilingual-e5-large with metadataFiltering)**: {answer_multilingual_e5_metadataFiltering}')
+    answer_multilingual_e5_metadataFiltering = await get_answer_multilingual_e5_metadataFiltering_reordering(llm, k, prompt, query)
+    st.write(f'**Answer (multilingual-e5-large with metadataFiltering)**: {answer_multilingual_e5_metadataFiltering}')
     
     
     # answer_without_rag = await get_answer_without_rag(llm, query)
