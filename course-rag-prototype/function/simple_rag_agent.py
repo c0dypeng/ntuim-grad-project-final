@@ -74,4 +74,4 @@ async def get_answer_simple_rag_agent(embedding, llm, k, query: str) -> str:
 
     answer = await asyncio.to_thread(agent_executor.invoke, {'input': query})
     print(answer)
-    return answer
+    return answer["output"]
