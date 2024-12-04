@@ -15,34 +15,23 @@ Ensure you have the following installed before proceeding:
 
 1. Clone the repository and navigate to the project directory:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/c0dypeng/ntuim-grad-project-final/
    cd course-rag-prototype
    ```
 2. Install the required dependencies:
    ```bash
-   pip install -r requirements.txt
+   make env
    ```
 3. Set up your environment variables by creating a `.env` file in the project root and adding your Pinecone and TAIDE credentials:
    ```bash
    PINECONE_API_KEY=<your-pinecone-api-key>
-   TAIDE_EMAIL=<your-taide-email>
-   TAIDE_PASSWORD=<your-taide-password>
+   OPENAI_API_KEY=<your-openai-api-key>
    ```
 4. Run the Streamlit app:
    ```bash
-   streamlit run streamlit_app.py
+   make
    ```
-
-## Known Issues
-
-- **Query Error with `k > 1`**: Setting the `k` value greater than 1 in `streamlit_app.py` may cause an error during query execution. This is currently being investigated.
-
-## Project Structure
-
-- **`data-processing.ipynb`**: Preprocesses the raw data and exports it as `course-v1.csv`.
-- **`taide_chat.py`**: Handles connections to the TAIDE large language model (LLM).
-- **`upload-pinecone.ipynb`**: Uploads the processed `course-v1.csv` data to Pinecone for vectorized retrieval.
-
+   
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
