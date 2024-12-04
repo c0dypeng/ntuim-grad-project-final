@@ -14,10 +14,10 @@ from langchain.prompts import PromptTemplate
 from langchain_openai import OpenAIEmbeddings
 
 # import functions
-from function.reordering import get_answer_reordering
-from function.simple_rag import get_answer_simple_rag
-from function.metadata_filtering import get_answer_metadataFiltering
-from function.only_llm import get_answer_without_rag
+# from function.reordering import get_answer_reordering
+# from function.simple_rag import get_answer_simple_rag
+# from function.metadata_filtering import get_metadata_filter
+# from function.only_llm import get_answer_without_rag
 from function.simple_rag_agent import get_answer_simple_rag_agent
 import os
 load_dotenv()
