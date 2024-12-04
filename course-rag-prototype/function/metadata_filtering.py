@@ -26,35 +26,9 @@ filter_prompt = ChatPromptTemplate.from_messages(
 
 # ********** FILTER PROMPT SETUP **********
 
-
-
-
-async def get_answer_metadataFiltering(embedding, llm, k, query: str) -> str:
-    embeddings = embedding
-    pc = Pinecone()
-    index_name = "ntuim-course"
-    embedded_query = embeddings.embed_query(query)
+async def get_metadata_filter(llm, query: str) -> str:
     structured_llm = llm.with_structured_output(CourseSearch)
     query_analyzer = filter_prompt | structured_llm
     result = await query_analyzer.ainvoke({"question": query})
     filter = result.getFilter() if result else None
-    vectorstore = PineconeVectorStore(
-        index_name=index_name, embedding=embeddings)
-    docs = await asyncio.to_thread(vectorstore.similarity_search, query=query, k=k, filter=filter)
-
-    # data filtering
-    # make shorten the page content to 700 characters
-    for doc in docs:
-        doc.page_content = doc.page_content[:700]
-    # make embedding_text in matadata to be empty
-    for doc in docs:
-        doc.metadata["embedding_text"] = ""
-    # make text in matadata to be empty
-    for doc in docs:
-        doc.metadata["text"] = ""
-
-    if not docs:
-        docs = []
-    chain = load_qa_chain(llm, chain_type="stuff")
-    answer = await asyncio.to_thread(chain.run, input_documents=docs, question=query)
-    return answer
+    return filter

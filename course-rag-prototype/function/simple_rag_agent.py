@@ -4,9 +4,25 @@ from langchain.tools import BaseTool
 from langchain.prompts import PromptTemplate
 from langchain.agents.agent_types import AgentType
 from langchain.agents import create_react_agent, AgentExecutor
+from langchain_community.document_transformers import LongContextReorder
 import asyncio
+from CourseSearch import CourseSearch
 from typing import Any
-from get_template import get_language_specific_template
+from .get_template import get_language_specific_template
+from .metadata_filtering import get_metadata_filter
+from langchain.schema import Document
+
+def prepare_documents_with_separation(docs):
+    prepared_docs = []
+    for i, doc in enumerate(docs, 1):
+        metadata_str = ', '.join(f"{key}: {value}" for key, value in doc.metadata.items())
+        formatted_content = (
+            f"[Document {i}]\n"
+            f"Metadata: {metadata_str}\n"
+            f"Content:\n{doc.page_content}\n"
+        )[:700]
+        prepared_docs.append(Document(page_content=formatted_content, metadata=doc.metadata))
+    return prepared_docs
 
 class VectorStoreSearchTool(BaseTool):
     name: str = "NtuCourseSearch"
@@ -22,17 +38,18 @@ class VectorStoreSearchTool(BaseTool):
         docs = await asyncio.to_thread(
             self.vectorstore.similarity_search, query=query, k=self.k
         )
+        reordering = LongContextReorder()
+        docs = reordering.reorder(docs)
 
         # data filtering
-        # make shorten the page content to 700 characters
-        for doc in docs:
-            doc.page_content = doc.page_content[:700]
         # make embedding_text in matadata to be empty
         for doc in docs:
             doc.metadata["embedding_text"] = ""
         # make text in matadata to be empty
         for doc in docs:
             doc.metadata["text"] = ""
+
+        docs = prepare_documents_with_separation(docs)
 
         return "\n\n".join([doc.page_content for doc in docs])
 
@@ -41,8 +58,10 @@ async def get_answer_simple_rag_agent(embedding, llm, k, query: str) -> str:
     index_name = "ntuim-course"
     vectorstore = PineconeVectorStore(index_name=index_name, embedding=embeddings)
     
-    
-    search_tool = VectorStoreSearchTool(vectorstore=vectorstore, k=k)
+    filter = await get_metadata_filter(llm, query)
+    print(filter)
+
+    search_tool = VectorStoreSearchTool(vectorstore=vectorstore, k=k, filter=filter)
     tools = [search_tool]
     template = get_language_specific_template(query)
 
