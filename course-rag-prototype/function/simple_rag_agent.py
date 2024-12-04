@@ -31,11 +31,15 @@ def prepare_documents_with_separation(docs):
 class VectorStoreSearchTool(BaseTool):
     name: str = "NtuCourseSearch"
     description: str = "搜尋台大課程"
-    vectorstore: Any
+    vectorstore: PineconeVectorStore
     k: int
+    filter: dict
 
     def _run(self, query: str) -> str:
-        docs = self.vectorstore.similarity_search(query=query, k=self.k)
+        try:
+            docs = self.vectorstore.similarity_search(query=query, k=self.k, filter=self.filter)
+        except:
+            docs = self.vectorstore.similarity_search(query=query, k=self.k)
         reordering = LongContextReorder()
         docs = reordering.transform_documents(docs)
 
@@ -47,14 +51,14 @@ class VectorStoreSearchTool(BaseTool):
         for doc in docs:
             doc.metadata["text"] = ""
         
-        print("Im here")
         docs = prepare_documents_with_separation(docs)
         return "\n\n".join([doc.page_content for doc in docs])
     
     async def _arun(self, query: str) -> str:
-        docs = await asyncio.to_thread(
-            self.vectorstore.similarity_search, query=query, k=self.k
-        )
+        try:
+            docs = self.vectorstore.similarity_search(query=query, k=self.k, filter=self.filter)
+        except:
+            docs = self.vectorstore.similarity_search(query=query, k=self.k)
         reordering = LongContextReorder()
         docs = reordering.transform_documents(docs)
 
@@ -66,7 +70,6 @@ class VectorStoreSearchTool(BaseTool):
         for doc in docs:
             doc.metadata["text"] = ""
         
-        print("Im here")
         docs = prepare_documents_with_separation(docs)
         return "\n\n".join([doc.page_content for doc in docs])
 
