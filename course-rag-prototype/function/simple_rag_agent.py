@@ -36,10 +36,10 @@ class VectorStoreSearchTool(BaseTool):
     filter: dict
 
     def _run(self, query: str) -> str:
-        try:
-            docs = self.vectorstore.similarity_search(query=query, k=self.k, filter=self.filter)
-        except:
-            docs = self.vectorstore.similarity_search(query=query, k=self.k)
+        # try:
+        #     docs = self.vectorstore.similarity_search(query=query, k=self.k, filter=self.filter)
+        # except:
+        docs = self.vectorstore.similarity_search(query=query, k=self.k)
         reordering = LongContextReorder()
         docs = reordering.transform_documents(docs)
 
@@ -55,10 +55,7 @@ class VectorStoreSearchTool(BaseTool):
         return "\n\n".join([doc.page_content for doc in docs])
     
     async def _arun(self, query: str) -> str:
-        try:
-            docs = self.vectorstore.similarity_search(query=query, k=self.k, filter=self.filter)
-        except:
-            docs = self.vectorstore.similarity_search(query=query, k=self.k)
+        docs = self.vectorstore.similarity_search(query=query, k=self.k)
         reordering = LongContextReorder()
         docs = reordering.transform_documents(docs)
 
