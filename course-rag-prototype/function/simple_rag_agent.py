@@ -14,7 +14,6 @@ from langchain.schema import Document
 
 def prepare_documents_with_separation(docs):
     prepared_docs = []
-    printOnce = False
     for i, doc in enumerate(docs, 1):
         metadata_str = ', '.join(f"{key}: {value}" for key, value in doc.metadata.items())
         formatted_content = (
@@ -22,9 +21,6 @@ def prepare_documents_with_separation(docs):
             f"Metadata: {metadata_str}\n"
             f"Content:\n{doc.page_content}\n"
         )[:700]
-        if not printOnce:
-            print(formatted_content)
-            printOnce = True
         prepared_docs.append(Document(page_content=formatted_content, metadata=doc.metadata))
     return prepared_docs
 
@@ -36,18 +32,13 @@ class VectorStoreSearchTool(BaseTool):
     filter: dict
 
     def _run(self, query: str) -> str:
-        # try:
-        #     docs = self.vectorstore.similarity_search(query=query, k=self.k, filter=self.filter)
-        # except:
-        docs = self.vectorstore.similarity_search(query=query, k=self.k)
+        docs = self.vectorstore.similarity_search(query=query, k=self.k, filter=self.filter)
         reordering = LongContextReorder()
         docs = reordering.transform_documents(docs)
 
-        # data filtering
-        # make embedding_text in matadata to be empty
         for doc in docs:
             doc.metadata["embedding_text"] = ""
-        # make text in matadata to be empty
+
         for doc in docs:
             doc.metadata["text"] = ""
         
@@ -55,15 +46,13 @@ class VectorStoreSearchTool(BaseTool):
         return "\n\n".join([doc.page_content for doc in docs])
     
     async def _arun(self, query: str) -> str:
-        docs = self.vectorstore.similarity_search(query=query, k=self.k)
+        docs = self.vectorstore.similarity_search(query=query, k=self.k, filter=self.filter)
         reordering = LongContextReorder()
         docs = reordering.transform_documents(docs)
 
-        # data filtering
-        # make embedding_text in matadata to be empty
         for doc in docs:
             doc.metadata["embedding_text"] = ""
-        # make text in matadata to be empty
+
         for doc in docs:
             doc.metadata["text"] = ""
         
