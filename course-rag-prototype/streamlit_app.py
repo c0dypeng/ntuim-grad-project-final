@@ -1,10 +1,11 @@
 # custom code for the streamlit app
 from taide_chat import taide_llm
-from langchain_openai import OpenAI
-from langchain_community.chat_models import ChatOpenAI 
+# from langchain_openai import OpenAI
+# from langchain_community.chat_models import ChatOpenAI  # 更新這一行
+from langchain_openai import ChatOpenAI
 
 import streamlit as st
-from langchain.chains.question_answering import load_qa_chain
+# from langchain.chains.question_answering import load_qa_chain
 
 # dependencies for system
 import asyncio
@@ -27,7 +28,7 @@ k = 5
 # llm = taide_llm # change this use different LLM provider
 # llm = OpenAI()
 
-llm = ChatOpenAI(model_name="gpt-4")
+llm = ChatOpenAI(model_name="gpt-4o-mini")
 
 chat_history = []
 if "chat_history" not in st.session_state:
