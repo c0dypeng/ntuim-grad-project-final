@@ -1,6 +1,7 @@
 # custom code for the streamlit app
 from taide_chat import taide_llm
 from langchain_openai import OpenAI
+from langchain_community.chat_models import ChatOpenAI  # 更新這一行
 
 import streamlit as st
 from langchain.chains.question_answering import load_qa_chain
@@ -18,13 +19,15 @@ from function.simple_rag import get_answer_simple_rag
 from function.metadata_filtering import get_answer_metadataFiltering
 from function.only_llm import get_answer_without_rag
 from function.simple_rag_agent import get_answer_simple_rag_agent
+import os
 load_dotenv()
-
 
 k = 5
 
 # llm = taide_llm # change this use different LLM provider
-llm = OpenAI()
+# llm = OpenAI()
+
+llm = ChatOpenAI(model_name="gpt-4")
 
 chat_history = []
 if "chat_history" not in st.session_state:
@@ -37,7 +40,7 @@ async def main(query: str):
 
     st.chat_message("user").markdown(query)
     embeddings = OpenAIEmbeddings(
-        model="text-embedding-3-large",
+        model="text-embedding-3-large"
     )
     # answer_simple_rag = await get_answer_simple_rag(embeddings, llm, k, query)
     # answer_reordering = await get_answer_reordering(embeddings, llm, k, query)
