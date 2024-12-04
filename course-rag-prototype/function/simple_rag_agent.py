@@ -33,9 +33,9 @@ class VectorStoreSearchTool(BaseTool):
     description: str = "搜尋台大課程"
     vectorstore: Any
     k: int
-
+    filter: dict
     def _run(self, query: str) -> str:
-        docs = self.vectorstore.similarity_search(query=query, k=self.k)
+        docs = self.vectorstore.similarity_search(query=query, k=self.k, filter = self.filter)
         reordering = LongContextReorder()
         docs = reordering.transform_documents(docs)
 
