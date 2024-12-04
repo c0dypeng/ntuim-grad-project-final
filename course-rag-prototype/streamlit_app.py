@@ -1,7 +1,7 @@
 # custom code for the streamlit app
 from taide_chat import taide_llm
 from langchain_openai import OpenAI
-from langchain_community.chat_models import ChatOpenAI  # 更新這一行
+from langchain_community.chat_models import ChatOpenAI 
 
 import streamlit as st
 from langchain.chains.question_answering import load_qa_chain
