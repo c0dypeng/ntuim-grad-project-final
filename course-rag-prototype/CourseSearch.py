@@ -26,17 +26,17 @@ class CourseSearch(BaseModel):
     )
 
     def pretty_print(self) -> None:
-        for field in self.__fields__:
+        for field in self.model_fields:
             if getattr(self, field) is not None and getattr(self, field) != getattr(
-                self.__fields__[field], "default", None
+                self.model_fields[field], "default", None
             ):
                 print(f"{field}: {getattr(self, field)}")
 
     def getFilter(self):
         filter_dict = {}
-        for field in self.__fields__:
+        for field in self.model_fields:
             value = getattr(self, field)
-            if value is not None and value != getattr(self.__fields__[field], "default", None):
+            if value is not None and value != getattr(self.model_fields[field], "default", None):
                 # if isinstance(value, float):
                 #     value = int(value)
                 if(field == "course_period"):
