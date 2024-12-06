@@ -2,6 +2,17 @@ from typing import Optional
 from pydantic import BaseModel, Field
 from enum import Enum
 
+class College(str, Enum):
+    文學院 = "文學院"
+    共同教育中心 = "共同教育中心"
+    理學院 = "理學院"
+    生命科學院 = "生命科學院"
+    工學院 = "工學院"
+    法律學院 = "法律學院"
+    生物資源暨農學院 = "生物資源暨農學院"
+    醫學院 = "醫學院"
+    管理學院 = "管理學院"
+
 class Department(str, Enum):
     中國文學系 = "中國文學系"
     日本語文學系 = "日本語文學系"
@@ -158,6 +169,10 @@ class Department(str, Enum):
 class CourseSearch(BaseModel):
     """Search over a database of courses in a university."""
 
+    上課地點: Optional[str] = Field(
+        None,
+        description="Location of the course."
+    )
     上課星期: Optional[float] = Field(
         None,
         description="Day of the course. 1 is for Monday, 2 is for Tuesday, .... 開課日子"
@@ -166,17 +181,33 @@ class CourseSearch(BaseModel):
         None,
         description="Period of the course. 0 is for 7:10-8:00, 1 is for 8:10-9:00, 2 is for 9:10-10:00, 3 is for 10:20-11:10, 4 is for 11:20-12:10, 5 is for 12:20-13:10, 6 is for 13:20-14:10, 7 is for 14:20-15:10, 8 is for 15:30-16:20, 9 is for 16:30-17:20, 10 is for 17:30-18:20, A is for 18:25-19:15, B is for 19:20-20:10, C is for 20:15-21:05, D is for 21:10-22:00."
     )
+    學分: Optional[int] = Field(
+        None,
+        description="Credit of the course."
+    )
+    所屬學院: Optional[College] = Field(
+        None,
+        description="College of the course."
+    )
     所屬系所: Optional[Department] = Field(
         None,
-        description="Department of the course. NTU department list."
+        description="Department of the course."
     )
     授課教師: Optional[str] = Field(
         None,
         description="Instructor of the course."
     )
+    # 課程名稱: Optional[str] = Field(
+    #     None,
+    #     description="Name of the course."
+    # )
     課程流水號: Optional[int] = Field(
         None,
         description="Unique identifier for the course."
+    )
+    通識領域: Optional[str] = Field(
+        None,
+        description="General education field of the course."
     )
 
     def pretty_print(self) -> None:
