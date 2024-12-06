@@ -43,6 +43,8 @@ class VectorStoreSearchTool(BaseTool):
             doc.metadata["text"] = ""
         
         docs = prepare_documents_with_separation(docs)
+        if len(docs) == 0:
+            return ["No result."]
         return "\n\n".join([doc.page_content for doc in docs])
     
     async def _arun(self, query: str) -> str:
@@ -57,6 +59,8 @@ class VectorStoreSearchTool(BaseTool):
             doc.metadata["text"] = ""
         
         docs = prepare_documents_with_separation(docs)
+        if len(docs) == 0:
+            return ["No result."]
         return "\n\n".join([doc.page_content for doc in docs])
 
 async def get_answer_simple_rag_agent(embedding, llm, k, query: str) -> str:    
